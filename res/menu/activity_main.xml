@@ -1,0 +1,12 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    
+    <item android:id="@+id/itemHome" android:title="@string/actionbar_home_label"></item><item android:id="@+id/itemRestaurants" android:title="@string/actionbar_restaurants_label" android:enabled="true"></item>
+    
+    <item android:id="@+id/itemTransporation" android:title="@string/actionbar_transportation_label" android:enabled="true"></item>
+    <item android:id="@+id/itemPaul" android:title="@string/actionbar_paul_label"></item>
+    <item android:id="@+id/itemTimetable" android:title="@string/actionbar_timetable_label"></item><item android:id="@+id/itemWeather" android:title="@string/actionbar_weather_label"></item>
+    <item android:id="@+id/itemTwitter" android:title="@string/actionbar_twitter_label"></item>
+    <item android:id="@+id/itemAsta" android:title="@string/actionbar_asta_label"></item>
+    
+    
+</menu>

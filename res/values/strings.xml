@@ -1,0 +1,16 @@
+<resources>
+
+    <string name="app_name">iUPB</string>
+    <string name="title_activity_main">iUPB</string>
+    <string name="actionbar_restaurants_label">Restaurants</string>
+    <string name="actionbar_transportation_label">Buses</string>
+    <string name="iupb_base_url">beta.i-upb.de</string>
+    <string name="progressbar_pleasewait">Bitte warten&#8230;</string>
+    <string name="actionbar_paul_label">PAUL</string>
+    <string name="actionbar_parties_label">Parties</string>
+    <string name="actionbar_weather_label">Wetter</string>
+    <string name="actionbar_twitter_label">Twitter</string>
+    <string name="actionbar_asta_label">AStA News</string>
+    <string name="actionbar_timetable_label">Stundenplan</string>
+    <string name="actionbar_home_label">Home</string>
+</resources>
