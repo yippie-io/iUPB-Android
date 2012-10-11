@@ -13,4 +13,8 @@
     <string name="actionbar_asta_label">AStA News</string>
     <string name="actionbar_timetable_label">Stundenplan</string>
     <string name="actionbar_home_label">Home</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="menu_settings">Settings</string>
+    <string name="title_activity_restaurant">RestaurantActivity</string>
+
 </resources>

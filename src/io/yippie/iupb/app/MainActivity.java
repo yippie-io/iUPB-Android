@@ -1,12 +1,15 @@
 package io.yippie.iupb.app;
 
+import io.yippie.iupb.lib.RestaurantManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -14,6 +17,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+@SuppressLint("SetJavaScriptEnabled")
 public class MainActivity extends Activity {
 
 	private ProgressDialog progressDialog;
@@ -30,6 +34,7 @@ public class MainActivity extends Activity {
         progressDialog.setCancelable(true);
 		
         mainWebView = (WebView) findViewById(R.id.webViewIUPB);
+        
         mainWebView.setWebViewClient(new WebViewClient() {
         	@Override
         	public boolean shouldOverrideUrlLoading(WebView view, String url) {
@@ -59,6 +64,11 @@ public class MainActivity extends Activity {
         	
         });
         
+        
+        // test
+        //new RestaurantManager(this).getAllRestaurants();
+        // this fails because Android Emulator does not allow a network request from code?
+        
         mainWebView.loadUrl(generateURL("/"));
         WebSettings webSettings = mainWebView.getSettings();
         webSettings.setJavaScriptEnabled(true);
@@ -83,7 +93,7 @@ public class MainActivity extends Activity {
     }
     
     private String generateURL(String target) {
-    	return "http://" + getString(R.string.iupb_base_url) + "/" + target  + "?canvas=true&os=android";
+    	return "http://" + getString(R.string.iupb_base_url) + "/" + target  + "?canvas=true&os=android&version=2beta";
     }
 
 	@Override
