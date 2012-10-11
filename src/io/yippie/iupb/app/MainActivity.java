@@ -67,7 +67,7 @@ public class MainActivity extends Activity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         // Check if the key event was the Back button and if there's history
-        if ((keyCode == KeyEvent.KEYCODE_BACK) && mainWebView.canGoBack()) {
+        if ((keyCode == KeyEvent.KEYCODE_BACK) && mainWebView.canGoBack() && !mainWebView.getUrl().equals(generateURL(""))) {
         	mainWebView.goBack();
             return true;
         }
@@ -90,6 +90,9 @@ public class MainActivity extends Activity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// TODO Auto-generated method stub
 		switch(item.getItemId()) {
+			case android.R.id.home:
+				mainWebView.loadUrl(generateURL(""));
+				return true;
 			case R.id.itemHome:
 				mainWebView.loadUrl(generateURL(""));
 				return true;
