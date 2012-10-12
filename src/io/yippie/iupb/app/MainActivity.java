@@ -1,12 +1,15 @@
 package io.yippie.iupb.app;
 
 import io.yippie.iupb.lib.RestaurantManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.util.Log;
@@ -18,6 +21,7 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Toast;
 
 @SuppressLint("SetJavaScriptEnabled")
 public class MainActivity extends Activity {
@@ -40,6 +44,15 @@ public class MainActivity extends Activity {
         
         mainWebView.setWebViewClient(new WebViewClient() {
         	@Override
+			public void onReceivedError(WebView view, int errorCode,
+					String description, String failingUrl) {
+				// TODO Auto-generated method stub
+				super.onReceivedError(view, errorCode, description, failingUrl);
+				//TODO: Add R-String
+				Toast.makeText(getApplicationContext(), "Leider ist ein Fehler aufgetreten. Vielleicht kein Internet?", Toast.LENGTH_LONG).show();
+			}
+
+			@Override
         	public boolean shouldOverrideUrlLoading(WebView view, String url) {
         		if (Uri.parse(url).getHost().contains(getString(R.string.iupb_base_url)) ||
         				Uri.parse(url).getHost().contains("facebook.com")  ||
@@ -78,8 +91,25 @@ public class MainActivity extends Activity {
         mainWebView.loadUrl(generateURL("restaurants"));
         WebSettings webSettings = mainWebView.getSettings();
         webSettings.setJavaScriptEnabled(true);
+        
+        if(!hasConnection()){
+            CharSequence text = "Keine Internet-Verbindung. Probier es nochmal, wenn du Internet hast!";
+            int duration = Toast.LENGTH_LONG;
+            Toast toast = Toast.makeText(getApplicationContext(), text, duration);
+            toast.show();
+        }
     }
-    	
+    
+    public boolean hasConnection() { 
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE); 
+        NetworkInfo netInfo = cm.getActiveNetworkInfo(); 
+        if (netInfo != null && netInfo.isConnectedOrConnecting()){ 
+            return true;
+        }
+        else{
+            return false;
+        } 
+    }
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         // Check if the key event was the Back button and if there's history
