@@ -13,6 +13,8 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.Window;
+import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -20,16 +22,19 @@ import android.webkit.WebViewClient;
 @SuppressLint("SetJavaScriptEnabled")
 public class MainActivity extends Activity {
 
-	private ProgressDialog progressDialog;
 	private WebView mainWebView;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // Let's display the progress in the activity title bar, like the
+        // browser app does.
+        requestWindowFeature(Window.FEATURE_PROGRESS);
         setContentView(R.layout.activity_main);
+        setProgressBarVisibility(true);
         
         //progressbar
-        createProgressDialog();
+        //createProgressDialog();
 
         mainWebView = (WebView) findViewById(R.id.webViewIUPB);
         
@@ -47,21 +52,22 @@ public class MainActivity extends Activity {
         			return true;
         		}
             }
-
-			@Override
-			public void onPageFinished(WebView view, String url) {
-				// TODO Auto-generated method stub
-				super.onPageFinished(view, url);
-				progressDialog.hide();
-			}
-
-			@Override
-			public void onPageStarted(WebView view, String url, Bitmap favicon) {
-				// TODO Auto-generated method stub
-				super.onPageStarted(view, url, favicon);
-				progressDialog.show();
-			}
         	
+        });
+        
+
+        mainWebView.getSettings().setJavaScriptEnabled(true);
+
+        final Activity activity = this;
+        mainWebView.setWebChromeClient(new WebChromeClient() {
+            public void onProgressChanged(WebView view, int progress) {
+            	// Activities and WebViews measure progress with different scales.
+            	// The progress meter will automatically disappear when we reach 100%
+            	activity.setProgress(progress * 100);
+            	if(progress == 100) {
+            		activity.setProgressBarVisibility(false);
+                }
+            }
         });
         
         
@@ -73,29 +79,7 @@ public class MainActivity extends Activity {
         WebSettings webSettings = mainWebView.getSettings();
         webSettings.setJavaScriptEnabled(true);
     }
-    
-    private void createProgressDialog() {
-    	progressDialog = new ProgressDialog(MainActivity.this);
-        progressDialog.setMessage(getString(R.string.progressbar_pleasewait));
-        progressDialog.setCancelable(true);
-    }
-    
-	@Override
-	protected void onPause() {
-		// TODO Auto-generated method stub
-		super.onPause();
-		if (progressDialog != null) {
-			progressDialog.dismiss();
-		}
-	}
-	
-	@Override
-	protected void onResume() {
-		// TODO Auto-generated method stub
-		super.onResume();
-		createProgressDialog();
-	}
-	
+    	
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         // Check if the key event was the Back button and if there's history
