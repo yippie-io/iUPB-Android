@@ -75,7 +75,7 @@ public class MainActivity extends Activity {
         //new RestaurantManager(this).getAllRestaurants();
         // this fails because Android Emulator does not allow a network request from code?
         
-        mainWebView.loadUrl(generateURL("/"));
+        mainWebView.loadUrl(generateURL("restaurants"));
         WebSettings webSettings = mainWebView.getSettings();
         webSettings.setJavaScriptEnabled(true);
     }
@@ -83,7 +83,7 @@ public class MainActivity extends Activity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         // Check if the key event was the Back button and if there's history
-        if ((keyCode == KeyEvent.KEYCODE_BACK) && mainWebView.canGoBack() && !mainWebView.getUrl().equals(generateURL(""))) {
+        if ((keyCode == KeyEvent.KEYCODE_BACK) && mainWebView.canGoBack()) {
         	mainWebView.goBack();
             return true;
         }
@@ -105,13 +105,8 @@ public class MainActivity extends Activity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// TODO Auto-generated method stub
+		mainWebView.clearHistory();
 		switch(item.getItemId()) {
-			case android.R.id.home:
-				mainWebView.loadUrl(generateURL(""));
-				return true;
-			case R.id.itemHome:
-				mainWebView.loadUrl(generateURL(""));
-				return true;
 			case R.id.itemRestaurants:
 				mainWebView.loadUrl(generateURL("restaurants"));
 				return true;

@@ -1,11 +1,9 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    
-    <item android:id="@+id/itemHome" android:title="@string/actionbar_home_label" android:icon="@drawable/ic_action_home" android:showAsAction="ifRoom|withText|collapseActionView"></item>
     <item android:id="@+id/itemRestaurants" android:icon="@drawable/ic_action_mensa" android:title="@string/actionbar_restaurants_label" android:enabled="true" android:showAsAction="ifRoom|withText"></item>
     
     <item android:id="@+id/itemTransporation" android:icon="@drawable/ic_action_bus" android:title="@string/actionbar_transportation_label" android:enabled="true" android:showAsAction="ifRoom|withText"></item>
     <item android:id="@+id/itemTimetable" android:icon="@drawable/ic_action_table" android:title="@string/actionbar_timetable_label" android:showAsAction="ifRoom|withText"></item><item android:id="@+id/itemPaul" android:icon="@drawable/ic_action_paul" android:title="@string/actionbar_paul_label" android:showAsAction="ifRoom|withText"></item>
-    <item android:id="@+id/itemWeather" android:title="@string/actionbar_weather_label" android:showAsAction="ifRoom|withText"></item>
+    <item android:id="@+id/itemWeather" android:icon="@drawable/ic_action_weather" android:title="@string/actionbar_weather_label" android:showAsAction="ifRoom|withText"></item>
     <item android:id="@+id/itemTwitter" android:icon="@drawable/ic_action_twitter" android:title="@string/actionbar_twitter_label" android:showAsAction="ifRoom|withText"></item>
     <item android:id="@+id/itemAsta" android:icon="@drawable/ic_action_asta" android:title="@string/actionbar_asta_label" android:showAsAction="ifRoom|withText"></item>
     
