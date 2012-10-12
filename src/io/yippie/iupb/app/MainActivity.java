@@ -29,16 +29,16 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
         
         //progressbar
-        progressDialog = new ProgressDialog(MainActivity.this);
-        progressDialog.setMessage(getString(R.string.progressbar_pleasewait));
-        progressDialog.setCancelable(true);
-		
+        createProgressDialog();
+
         mainWebView = (WebView) findViewById(R.id.webViewIUPB);
         
         mainWebView.setWebViewClient(new WebViewClient() {
         	@Override
         	public boolean shouldOverrideUrlLoading(WebView view, String url) {
-        		if (Uri.parse(url).getHost().equals(getString(R.string.iupb_base_url))) {
+        		if (Uri.parse(url).getHost().contains(getString(R.string.iupb_base_url)) ||
+        				Uri.parse(url).getHost().contains("facebook.com")  ||
+        				Uri.parse(url).getHost().contains("google.com") ) {
         	        view.loadUrl(url);
         	        return false;	
         		}else {
@@ -74,6 +74,28 @@ public class MainActivity extends Activity {
         webSettings.setJavaScriptEnabled(true);
     }
     
+    private void createProgressDialog() {
+    	progressDialog = new ProgressDialog(MainActivity.this);
+        progressDialog.setMessage(getString(R.string.progressbar_pleasewait));
+        progressDialog.setCancelable(true);
+    }
+    
+	@Override
+	protected void onPause() {
+		// TODO Auto-generated method stub
+		super.onPause();
+		if (progressDialog != null) {
+			progressDialog.dismiss();
+		}
+	}
+	
+	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		createProgressDialog();
+	}
+	
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         // Check if the key event was the Back button and if there's history
@@ -123,6 +145,9 @@ public class MainActivity extends Activity {
 				return true;
 			case R.id.itemWeather:
 				mainWebView.loadUrl(generateURL("weather"));
+				return true;
+			case R.id.itemTwitter:
+				mainWebView.loadUrl(generateURL("twitter"));
 				return true;
 			default:
 				return super.onOptionsItemSelected(item); 
