@@ -28,8 +28,8 @@ import android.webkit.WebViewClient;
 @SuppressLint("SetJavaScriptEnabled")
 public class MainActivity extends Activity {
 
-	private static final String ASSETS_LOADING_HTML = "file:///android_asset/assets/loading.html";
-	private static final String ASSETS_OFFLINE_HTML = "file:///android_asset/assets/offline.html";
+	private static final String ASSETS_LOADING_HTML = "file:///android_asset/loading.html";
+	private static final String ASSETS_OFFLINE_HTML = "file:///android_asset/offline.html";
 	private WebView mainWebView;
 	private boolean offlineMode = false;
 	private BroadcastReceiver broadcastReceiver;
@@ -255,7 +255,7 @@ public class MainActivity extends Activity {
     
     private String generateURL(String target) {
     	//get locale
-    	String locale = Locale.getDefault().getDisplayLanguage().equals("de") ? "de" : "en";
+    	String locale = Locale.getDefault().getLanguage().contains("de") ? "de" : "en";
     	return "http://" + getString(R.string.iupb_base_url) + "/" + locale + "/" + target  + "?canvas=true&os=android&version=2beta";
     }
 
