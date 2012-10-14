@@ -1,9 +1,12 @@
 package io.yippie.iupb.lib;
 
+import io.yippie.iupb.app.R;
 import android.content.Context;
+import android.util.Log;
 import android.widget.Toast;
 
 public class IUPBJavascriptInterface {
+	private static final String TAG = "iupb";
 	Context mContext;
 
 	/** Instantiate the interface and set the context */
@@ -13,6 +16,7 @@ public class IUPBJavascriptInterface {
 
 	/** Show a toast from the web page */
 	public void showToast(String toast) {
+		Log.v(TAG, "javascript triggers toast");
 		Toast.makeText(mContext, toast, Toast.LENGTH_LONG).show();
 	}
 }
