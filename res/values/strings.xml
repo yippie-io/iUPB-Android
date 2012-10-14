@@ -7,14 +7,15 @@
     <string name="iupb_base_url">beta.i-upb.de</string>
     <string name="progressbar_pleasewait">Bitte warten&#8230;</string>
     <string name="actionbar_paul_label">PAUL</string>
-    <string name="actionbar_parties_label">Parties</string>
     <string name="actionbar_weather_label">Wetter</string>
     <string name="actionbar_twitter_label">Twitter</string>
+    <string name="actionbar_parties_label">Parties</string>
     <string name="actionbar_asta_label">AStA News</string>
     <string name="actionbar_timetable_label">Stundenplan</string>
     <string name="actionbar_home_label">Home</string>
     <string name="hello_world">Hello world!</string>
     <string name="menu_settings">Settings</string>
     <string name="title_activity_restaurant">RestaurantActivity</string>
+    <string name="app_tag">iupb</string>
 
 </resources>

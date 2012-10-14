@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="io.yippie.iupb.app"
     android:versionCode="9"
-    android:versionName="1.7" >
+    android:versionName="1.1.0" >
 
     <uses-sdk
         android:minSdkVersion="8"
@@ -16,7 +16,8 @@
         android:theme="@style/AppTheme" >
         <activity
             android:name=".MainActivity"
-            android:label="@string/title_activity_main" >
+            android:label="@string/title_activity_main" 
+            android:configChanges="orientation|keyboardHidden|screenSize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
