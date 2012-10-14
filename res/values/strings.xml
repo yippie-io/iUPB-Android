@@ -4,7 +4,7 @@
     <string name="title_activity_main">iUPB</string>
     <string name="actionbar_restaurants_label">Speisepläne</string>
     <string name="actionbar_transportation_label">Bus-Zeiten</string>
-    <string name="iupb_base_url">beta.i-upb.de</string>
+    <string name="iupb_base_url">www.i-upb.de</string>
     <string name="progressbar_pleasewait">Bitte warten&#8230;</string>
     <string name="actionbar_paul_label">PAUL</string>
     <string name="actionbar_weather_label">Wetter</string>
