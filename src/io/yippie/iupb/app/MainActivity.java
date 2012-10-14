@@ -1,5 +1,7 @@
 package io.yippie.iupb.app;
 
+import java.util.Locale;
+
 import io.yippie.iupb.lib.IUPBJavascriptInterface;
 import io.yippie.iupb.lib.VersionHelper;
 import android.net.ConnectivityManager;
@@ -22,11 +24,11 @@ import android.view.Window;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.Toast;
 
 @SuppressLint("SetJavaScriptEnabled")
 public class MainActivity extends Activity {
 
+	private static final String ASSETS_LOADING_HTML = "file:///android_asset/assets/loading.html";
 	private static final String ASSETS_OFFLINE_HTML = "file:///android_asset/assets/offline.html";
 	private WebView mainWebView;
 	private boolean offlineMode = false;
@@ -112,7 +114,8 @@ public class MainActivity extends Activity {
         
         //enable javascript
         mainWebView.getSettings().setJavaScriptEnabled(true);
-        mainWebView.addJavascriptInterface(new IUPBJavascriptInterface(this), "Android");
+        //mainWebView.addJavascriptInterface(new IUPBJavascriptInterface(this), "Android");
+        mainWebView.getSettings().setUserAgentString(mainWebView.getSettings().getUserAgentString() + " (iUPBAndroidNativeApp)");
         
         //configure the progress change
         final Activity activity = this;
@@ -132,10 +135,13 @@ public class MainActivity extends Activity {
         });
         
         //register receiver for connection changes
-        registerBroadcastReceiver(activity);
-        registerOfflineHandling();
+        //registerBroadcastReceiver(activity);
+        //registerOfflineHandling();
         alreadyConfigured = true;
     	
+        //load loading url
+        mainWebView.loadUrl(ASSETS_LOADING_HTML);
+        
         //if no default url exists, set it
         if (getCurrentUrl() == null)
         	currentUrl = generateURL("restaurants");
@@ -182,7 +188,7 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onPause() {
 		// TODO Auto-generated method stub
-		unregisterServices();
+		//unregisterServices();
 		super.onPause();
 	}
 
@@ -193,7 +199,7 @@ public class MainActivity extends Activity {
 	protected void onResume() {
 		// TODO Auto-generated method stub
 		super.onResume();
-        registerOfflineHandling();
+        //registerOfflineHandling();
 	}
 
 	private synchronized void registerOfflineHandling() {
@@ -217,6 +223,7 @@ public class MainActivity extends Activity {
 				mainWebView.goBack();
 			else
 		        this.loadWebView(generateURL("restaurants"));
+			mainWebView.clearHistory();
 		}
 	}
 
@@ -224,6 +231,7 @@ public class MainActivity extends Activity {
 		if(!offlineMode) {
 			offlineMode = true;
 			mainWebView.loadUrl(ASSETS_OFFLINE_HTML);
+			mainWebView.clearHistory();
 		}
     }
 
@@ -246,13 +254,15 @@ public class MainActivity extends Activity {
     }
     
     private String generateURL(String target) {
-    	return "http://" + getString(R.string.iupb_base_url) + "/" + target  + "?canvas=true&os=android&version=2beta";
+    	//get locale
+    	String locale = Locale.getDefault().getDisplayLanguage().equals("de") ? "de" : "en";
+    	return "http://" + getString(R.string.iupb_base_url) + "/" + locale + "/" + target  + "?canvas=true&os=android&version=2beta";
     }
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// TODO Auto-generated method stub
-		mainWebView.clearHistory();
+		//mainWebView.clearHistory();
 		offlineMode = false;
 		Log.i(getString(R.string.app_tag), "menu selected, item = " + item.getItemId());
 		switch(item.getItemId()) {
