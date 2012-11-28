@@ -1,46 +1,42 @@
 package io.yippie.iupb.app;
 
-import io.yippie.iupb.lib.VersionHelper;
-
 import java.util.Locale;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.Window;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
+import com.actionbarsherlock.view.Window;
 
 @SuppressLint("SetJavaScriptEnabled")
 public class MainActivity extends SherlockActivity {
 
 	private static final String ASSETS_LOADING_HTML = "file:///android_asset/loading.html";
 	private static final String ASSETS_OFFLINE_HTML = "file:///android_asset/offline.html";
-	private WebView mainWebView;
+	private WebView mMainWebView;
 	private boolean offlineMode = false;
 
 	/**
 	 * the current url of the webView
 	 */
-	private String currentUrl;
-	private boolean alreadyConfigured = false;
+	private String mCurrentUrl;
 
 	/**
 	 * @return the currentUrl
 	 */
 	private String getCurrentUrl() {
-		return currentUrl;
+		return mCurrentUrl;
 	}
 
 	@Override
@@ -48,40 +44,33 @@ public class MainActivity extends SherlockActivity {
 		super.onCreate(savedInstanceState);
 		Log.i(getString(R.string.app_tag), "main activity started");
 		requestWindowFeature(Window.FEATURE_PROGRESS);
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
-			requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
-		getSupportActionBar().setHomeButtonEnabled(true);
+		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 
 		// Let's display the progress in the activity title bar, like the
 		// browser app does.
 		configureLayout();
-
-		// progressbar
-		// createProgressDialog();
-
-		configureWebView();
+		if (savedInstanceState == null)
+			configureWebView();
 	}
 
 	/**
 	 * 
 	 */
 	private void configureLayout() {
+		getSupportActionBar().setHomeButtonEnabled(true);
+		setSupportProgressBarVisibility(true);
+		setSupportProgressBarIndeterminateVisibility(true);
 		setContentView(R.layout.activity_main);
-		setProgressBarVisibility(true);
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
-			setProgressBarIndeterminateVisibility(true);
 	}
 
 	/**
 	 * 
 	 */
-	private synchronized void configureWebView() {
-		if (alreadyConfigured)
-			return;
+	private void configureWebView() {
 		Log.i(getString(R.string.app_tag), "configuring webview");
-		mainWebView = (WebView) findViewById(R.id.webViewIUPB);
+		mMainWebView = (WebView) findViewById(R.id.webViewIUPB);
 
-		mainWebView.setWebViewClient(new WebViewClient() {
+		mMainWebView.setWebViewClient(new WebViewClient() {
 			@Override
 			public void onReceivedError(WebView view, int errorCode,
 					String description, String failingUrl) {
@@ -115,44 +104,39 @@ public class MainActivity extends SherlockActivity {
 		});
 
 		// enable javascript
-		mainWebView.getSettings().setJavaScriptEnabled(true);
-		// mainWebView.addJavascriptInterface(new IUPBJavascriptInterface(this),
+		mMainWebView.getSettings().setJavaScriptEnabled(true);
+		// mMainWebView.addJavascriptInterface(new
+		// IUPBJavascriptInterface(this),
 		// "Android");
-		mainWebView.getSettings().setUserAgentString(
-				mainWebView.getSettings().getUserAgentString()
+		mMainWebView.getSettings().setUserAgentString(
+				mMainWebView.getSettings().getUserAgentString()
 						+ " (iUPBAndroidNativeApp)");
 
 		// configure the progress change
-		final Activity activity = this;
-		mainWebView.setWebChromeClient(new WebChromeClient() {
+		mMainWebView.setWebChromeClient(new WebChromeClient() {
 			public void onProgressChanged(WebView view, int progress) {
 				// Activities and WebViews measure progress with different
 				// scales.
 				// The progress meter will automatically disappear when we reach
 				// 100%
-				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
-					setProgressBarIndeterminateVisibility(true);
-				activity.setProgress(progress * 100);
+				Log.i(getString(R.string.app_tag), "Loading progress:" + (progress * 100));
+				MainActivity.this.setSupportProgressBarVisibility(true);
+				MainActivity.this.setSupportProgressBarIndeterminateVisibility(true);
+				MainActivity.this.setSupportProgress(progress * 100);
 				if (progress == 100) {
-					activity.setProgressBarVisibility(false);
-					if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
-						setProgressBarIndeterminateVisibility(false);
+					MainActivity.this.setSupportProgressBarVisibility(false);
+					MainActivity.this.setSupportProgressBarIndeterminateVisibility(false);
 				}
 			}
 		});
 
-		// register receiver for connection changes
-		// registerBroadcastReceiver(activity);
-		// registerOfflineHandling();
-		alreadyConfigured = true;
-
 		// load loading url
-		mainWebView.loadUrl(ASSETS_LOADING_HTML);
+		mMainWebView.loadUrl(ASSETS_LOADING_HTML);
 
 		// if no default url exists, set it
 		if (getCurrentUrl() == null)
-			currentUrl = generateURL("restaurants");
-		mainWebView.loadUrl(getCurrentUrl());
+			mCurrentUrl = generateURL("restaurants");
+		mMainWebView.loadUrl(getCurrentUrl());
 	}
 
 	/*
@@ -166,8 +150,7 @@ public class MainActivity extends SherlockActivity {
 	public void onConfigurationChanged(Configuration newConfig) {
 		// TODO Auto-generated method stub
 		super.onConfigurationChanged(newConfig);
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
-			VersionHelper.refreshActionBarMenu(this);
+		this.invalidateOptionsMenu();
 	}
 
 	/*
@@ -197,27 +180,27 @@ public class MainActivity extends SherlockActivity {
 	protected synchronized void removeOfflineNotice() {
 		if (offlineMode) {
 			offlineMode = false;
-			if (mainWebView.canGoBack())
-				mainWebView.goBack();
+			if (mMainWebView.canGoBack())
+				mMainWebView.goBack();
 			else
 				this.loadWebView(generateURL("restaurants"));
-			mainWebView.clearHistory();
+			mMainWebView.clearHistory();
 		}
 	}
 
 	private synchronized void displayOfflineNotice() {
 		if (!offlineMode) {
 			offlineMode = true;
-			mainWebView.loadUrl(ASSETS_OFFLINE_HTML);
-			mainWebView.clearHistory();
+			mMainWebView.loadUrl(ASSETS_OFFLINE_HTML);
+			mMainWebView.clearHistory();
 		}
 	}
 
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		// Check if the key event was the Back button and if there's history
-		if ((keyCode == KeyEvent.KEYCODE_BACK) && mainWebView.canGoBack()) {
-			mainWebView.goBack();
+		if ((keyCode == KeyEvent.KEYCODE_BACK) && mMainWebView.canGoBack()) {
+			mMainWebView.goBack();
 			return true;
 		}
 		// If it wasn't the Back key or there's no web page history, bubble up
@@ -228,7 +211,7 @@ public class MainActivity extends SherlockActivity {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		this.getSupportMenuInflater().inflate(R.menu.activity_main, menu);
+		getSupportMenuInflater().inflate(R.menu.activity_main, menu);
 		return true;
 	}
 
@@ -243,7 +226,7 @@ public class MainActivity extends SherlockActivity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// TODO Auto-generated method stub
-		// mainWebView.clearHistory();
+		// mMainWebView.clearHistory();
 		offlineMode = false;
 		Log.i(getString(R.string.app_tag),
 				"menu selected, item = " + item.getItemId());
@@ -289,8 +272,8 @@ public class MainActivity extends SherlockActivity {
 	 * loads a specific view for the current webview
 	 */
 	private void loadWebView(String url) {
-		currentUrl = url;
-		mainWebView.loadUrl(currentUrl);
+		mCurrentUrl = url;
+		mMainWebView.loadUrl(mCurrentUrl);
 	}
 
 }

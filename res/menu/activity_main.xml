@@ -1,8 +1,9 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/itemRestaurants" android:icon="@drawable/ic_action_mensa" android:title="@string/actionbar_restaurants_label" android:enabled="true" android:showAsAction="ifRoom"></item>
+    <item android:id="@+id/itemRestaurants" android:icon="@drawable/ic_action_mensa" android:title="@string/actionbar_restaurants_label" android:showAsAction="ifRoom"></item>
     
-    <item android:id="@+id/itemTransporation" android:icon="@drawable/ic_action_bus" android:title="@string/actionbar_transportation_label" android:enabled="true" android:showAsAction="ifRoom"></item>
-    <item android:id="@+id/itemTimetable" android:icon="@drawable/ic_action_table" android:title="@string/actionbar_timetable_label" android:showAsAction="ifRoom"></item><item android:id="@+id/itemPaul" android:icon="@drawable/ic_action_paul" android:title="@string/actionbar_paul_label" android:showAsAction="ifRoom"></item>
+    <item android:id="@+id/itemTransporation" android:icon="@drawable/ic_action_bus" android:title="@string/actionbar_transportation_label" android:showAsAction="ifRoom"></item>
+    <item android:id="@+id/itemTimetable" android:icon="@drawable/ic_action_table" android:title="@string/actionbar_timetable_label" android:showAsAction="ifRoom"></item>
+    <item android:id="@+id/itemPaul" android:icon="@drawable/ic_action_paul" android:title="@string/actionbar_paul_label" android:showAsAction="ifRoom"></item>
     <item android:id="@+id/itemWeather" android:icon="@drawable/ic_action_weather" android:title="@string/actionbar_weather_label" android:showAsAction="ifRoom"></item>
     <item android:id="@+id/itemParties" android:icon="@drawable/ic_action_party" android:title="@string/actionbar_parties_label" android:showAsAction="ifRoom"></item>
     <item android:id="@+id/itemTwitter" android:icon="@drawable/ic_action_twitter" android:title="@string/actionbar_twitter_label" android:showAsAction="ifRoom"></item>
