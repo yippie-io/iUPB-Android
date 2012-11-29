@@ -1,25 +1,35 @@
 package io.yippie.iupb.app;
 
+import io.yippie.iupb.lib.VersionHelper;
+
 import java.util.Locale;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.ArrayAdapter;
+import android.widget.TextView;
 
+import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.app.ActionBar.Tab;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.Window;
 
 @SuppressLint("SetJavaScriptEnabled")
-public class MainActivity extends SherlockActivity {
+public class MainActivity extends SherlockActivity implements
+		ActionBar.TabListener, ActionBar.OnNavigationListener {
 
 	private static final String ASSETS_LOADING_HTML = "file:///android_asset/loading.html";
 	private static final String ASSETS_OFFLINE_HTML = "file:///android_asset/offline.html";
@@ -30,6 +40,7 @@ public class MainActivity extends SherlockActivity {
 	 * the current url of the webView
 	 */
 	private String mCurrentUrl;
+	private String[] mMenuItemURLs;
 
 	/**
 	 * @return the currentUrl
@@ -41,24 +52,81 @@ public class MainActivity extends SherlockActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		Log.i(getString(R.string.app_tag), "main activity started");
 		requestWindowFeature(Window.FEATURE_PROGRESS);
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 
 		// Let's display the progress in the activity title bar, like the
 		// browser app does.
 		configureLayout();
-		if (savedInstanceState == null)
+		mMenuItemURLs = getResources().getStringArray(R.array.menu_items_urls);
+		if (savedInstanceState == null) {
 			configureWebView();
+			configureActionbar();
+		}
+	}
+
+	@Override
+	public void onSaveInstanceState(Bundle savedInstanceState) {
+		super.onSaveInstanceState(savedInstanceState);
+		savedInstanceState.putString("currentURL", mCurrentUrl);
+	}
+
+	@Override
+	public void onRestoreInstanceState(Bundle savedInstanceState) {
+		super.onRestoreInstanceState(savedInstanceState);
+		String url = savedInstanceState.getString("currentURL");
+		loadWebView(url);
+	}
+
+	/**
+	 * 
+	 */
+	private void configureActionbar() {
+		final ActionBar actionBar = getSupportActionBar();
+		actionBar.setHomeButtonEnabled(true);
+		actionBar.setDisplayShowHomeEnabled(true);
+		actionBar.setDisplayShowTitleEnabled(true);
+		setSupportProgressBarVisibility(true);
+		setSupportProgressBarIndeterminateVisibility(true);
+		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+		Context context = getSupportActionBar().getThemedContext();
+		ArrayAdapter<CharSequence> list = ArrayAdapter.createFromResource(
+				context, R.array.menu_items_labels,
+				R.layout.sherlock_spinner_item);
+		list.setDropDownViewResource(R.layout.sherlock_spinner_dropdown_item);
+		actionBar.setListNavigationCallbacks(list, this);
+		/*
+		 * actionBar.addTab(actionBar.newTab().setIcon(R.drawable.ic_action_mensa
+		 * ) .setTag("restaurants") //
+		 * .setText(R.string.actionbar_restaurants_label)
+		 * .setTabListener(this));
+		 * actionBar.addTab(actionBar.newTab().setIcon(R.drawable.ic_action_bus)
+		 * .setTag("transportation") //
+		 * .setText(R.string.actionbar_transportation_label)
+		 * .setTabListener(this));
+		 * actionBar.addTab(actionBar.newTab().setIcon(R.
+		 * drawable.ic_action_table) .setTag("timetable") //
+		 * .setText(R.string.actionbar_timetable_label) .setTabListener(this));
+		 * actionBar
+		 * .addTab(actionBar.newTab().setIcon(R.drawable.ic_action_paul)
+		 * .setTag("courses") // .setText(R.string.actionbar_paul_label)
+		 * .setTabListener(this));
+		 * actionBar.addTab(actionBar.newTab().setIcon(R.
+		 * drawable.ic_action_party) .setTag("events") //
+		 * .setText(R.string.actionbar_parties_label) .setTabListener(this));
+		 * actionBar.addTab(actionBar.newTab()
+		 * .setIcon(R.drawable.ic_action_weather).setTag("weather") //
+		 * .setText(R.string.actionbar_weather_label) .setTabListener(this));
+		 * actionBar.addTab(actionBar.newTab()
+		 * .setIcon(R.drawable.ic_action_twitter).setTag("twitter") //
+		 * .setText(R.string.actionbar_twitter_label) .setTabListener(this));
+		 */
 	}
 
 	/**
 	 * 
 	 */
 	private void configureLayout() {
-		getSupportActionBar().setHomeButtonEnabled(true);
-		setSupportProgressBarVisibility(true);
-		setSupportProgressBarIndeterminateVisibility(true);
 		setContentView(R.layout.activity_main);
 	}
 
@@ -118,13 +186,16 @@ public class MainActivity extends SherlockActivity {
 				// scales.
 				// The progress meter will automatically disappear when we reach
 				// 100%
-				Log.i(getString(R.string.app_tag), "Loading progress:" + (progress * 100));
+				Log.i(getString(R.string.app_tag), "Loading progress:"
+						+ (progress * 100));
 				MainActivity.this.setSupportProgressBarVisibility(true);
-				MainActivity.this.setSupportProgressBarIndeterminateVisibility(true);
+				MainActivity.this
+						.setSupportProgressBarIndeterminateVisibility(true);
 				MainActivity.this.setSupportProgress(progress * 100);
 				if (progress == 100) {
 					MainActivity.this.setSupportProgressBarVisibility(false);
-					MainActivity.this.setSupportProgressBarIndeterminateVisibility(false);
+					MainActivity.this
+							.setSupportProgressBarIndeterminateVisibility(false);
 				}
 			}
 		});
@@ -133,8 +204,8 @@ public class MainActivity extends SherlockActivity {
 		mMainWebView.loadUrl(ASSETS_LOADING_HTML);
 
 		// if no default url exists, set it
-		if (getCurrentUrl() == null)
-			mCurrentUrl = generateURL("restaurants");
+		if (mCurrentUrl == null)
+			mCurrentUrl = generateURL(getString(R.string.actionbar_restaurants_url));
 		mMainWebView.loadUrl(getCurrentUrl());
 	}
 
@@ -149,31 +220,8 @@ public class MainActivity extends SherlockActivity {
 	public void onConfigurationChanged(Configuration newConfig) {
 		// TODO Auto-generated method stub
 		super.onConfigurationChanged(newConfig);
-		this.invalidateOptionsMenu();
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see android.app.Activity#onPause()
-	 */
-	@Override
-	protected void onPause() {
-		// TODO Auto-generated method stub
-		// unregisterServices();
-		super.onPause();
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see android.app.Activity#onResume()
-	 */
-	@Override
-	protected void onResume() {
-		// TODO Auto-generated method stub
-		super.onResume();
-		// registerOfflineHandling();
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
+			VersionHelper.refreshActionBarMenu(this);
 	}
 
 	protected synchronized void removeOfflineNotice() {
@@ -182,7 +230,7 @@ public class MainActivity extends SherlockActivity {
 			if (mMainWebView.canGoBack())
 				mMainWebView.goBack();
 			else
-				this.loadWebView(generateURL("restaurants"));
+				loadWebView(generateURL(getString(R.string.actionbar_restaurants_url)));
 			mMainWebView.clearHistory();
 		}
 	}
@@ -224,36 +272,13 @@ public class MainActivity extends SherlockActivity {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		// TODO Auto-generated method stub
 		// mMainWebView.clearHistory();
 		offlineMode = false;
 		Log.i(getString(R.string.app_tag),
 				"menu selected, item = " + item.getItemId());
 		switch (item.getItemId()) {
-		case R.id.itemRestaurants:
 		case android.R.id.home:
 			loadHomeScreen();
-			return true;
-		case R.id.itemTransporation:
-			loadWebView(generateURL("transportation"));
-			return true;
-		case R.id.itemAsta:
-			loadWebView(generateURL("asta"));
-			return true;
-		case R.id.itemPaul:
-			loadWebView(generateURL("courses"));
-			return true;
-		case R.id.itemTimetable:
-			loadWebView(generateURL("timetable"));
-			return true;
-		case R.id.itemParties:
-			loadWebView(generateURL("events"));
-			return true;
-		case R.id.itemWeather:
-			loadWebView(generateURL("weather"));
-			return true;
-		case R.id.itemTwitter:
-			loadWebView(generateURL("twitter"));
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
@@ -264,7 +289,7 @@ public class MainActivity extends SherlockActivity {
 	 * 
 	 */
 	private void loadHomeScreen() {
-		loadWebView(generateURL("restaurants"));
+		loadWebView(generateURL(getString(R.string.actionbar_restaurants_url)));
 	}
 
 	/**
@@ -272,7 +297,28 @@ public class MainActivity extends SherlockActivity {
 	 */
 	private void loadWebView(String url) {
 		mCurrentUrl = url;
+		offlineMode = false;
 		mMainWebView.loadUrl(mCurrentUrl);
+	}
+
+	public void onTabSelected(Tab tab, FragmentTransaction ft) {
+		loadWebView(generateURL((String) tab.getTag()));
+
+	}
+
+	public void onTabUnselected(Tab tab, FragmentTransaction ft) {
+		// TODO Auto-generated method stub
+
+	}
+
+	public void onTabReselected(Tab tab, FragmentTransaction ft) {
+		// TODO Auto-generated method stub
+
+	}
+
+	public boolean onNavigationItemSelected(int itemPosition, long itemId) {
+		loadWebView(generateURL(mMenuItemURLs[itemPosition]));
+		return true;
 	}
 
 }
