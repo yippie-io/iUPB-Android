@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="menu_items_labels">
+        <item>@string/actionbar_restaurants_label</item>
+        <item>@string/actionbar_transportation_label</item>
+        <item>@string/actionbar_timetable_label</item>
+        <item>@string/actionbar_paul_label</item>
+        <item>@string/actionbar_parties_label</item>
+        <item>@string/actionbar_weather_label</item>
+        <item>@string/actionbar_twitter_label</item>
+        <item>@string/actionbar_asta_label</item>
+    </string-array>
+    <string-array name="menu_items_urls">
+        <item>@string/actionbar_restaurants_url</item>
+        <item>@string/actionbar_transportation_url</item>
+        <item>@string/actionbar_timetable_url</item>
+        <item>@string/actionbar_paul_url</item>
+        <item>@string/actionbar_parties_url</item>
+        <item>@string/actionbar_weather_url</item>
+        <item>@string/actionbar_twitter_url</item>
+        <item>@string/actionbar_asta_url</item>
+    </string-array>
+</resources>
