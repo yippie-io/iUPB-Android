@@ -7,8 +7,10 @@
         <item>@string/actionbar_paul_label</item>
         <item>@string/actionbar_parties_label</item>
         <item>@string/actionbar_weather_label</item>
+        <item>@string/actionbar_posts_label</item>
         <item>@string/actionbar_twitter_label</item>
         <item>@string/actionbar_asta_label</item>
+        <item>@string/actionbar_pingo_label</item>
     </string-array>
     <string-array name="menu_items_urls">
         <item>@string/actionbar_restaurants_url</item>
@@ -17,7 +19,9 @@
         <item>@string/actionbar_paul_url</item>
         <item>@string/actionbar_parties_url</item>
         <item>@string/actionbar_weather_url</item>
+        <item>@string/actionbar_posts_url</item>
         <item>@string/actionbar_twitter_url</item>
         <item>@string/actionbar_asta_url</item>
+        <item>@string/actionbar_pingo_url</item>
     </string-array>
 </resources>

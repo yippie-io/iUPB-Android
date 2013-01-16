@@ -6,7 +6,7 @@
     <string name="actionbar_restaurants_url">restaurants</string>
     <string name="actionbar_transportation_label">Bus-Zeiten</string>
     <string name="actionbar_transportation_url">transportation</string>
-    <string name="iupb_base_url">www.i-upb.de</string>
+    <string name="iupb_base_url">beta.i-upb.de</string>
     <string name="progressbar_pleasewait">Bitte warten&#8230;</string>
     <string name="actionbar_paul_label">PAUL</string>
     <string name="actionbar_paul_url">courses</string>
@@ -18,6 +18,10 @@
     <string name="actionbar_parties_url">events</string>
     <string name="actionbar_asta_label">AStA News</string>
     <string name="actionbar_asta_url">asta</string>
+    <string name="actionbar_posts_label">Pinnwand</string>
+    <string name="actionbar_posts_url">posts</string>
+    <string name="actionbar_pingo_label">Pingo</string>
+    <string name="actionbar_pingo_url">pages/pingo</string>
     <string name="actionbar_timetable_label">Stundenplan</string>
     <string name="actionbar_timetable_url">timetable</string>
     <string name="actionbar_home_label">Home</string>
