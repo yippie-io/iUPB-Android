@@ -323,11 +323,11 @@ public class MainActivity extends SherlockActivity implements
 		Log.i(DEBUG_TAG,
 				"menu selected, item = " + item.getItemId());
 		switch (item.getItemId()) {
-		case android.R.id.home:
-			loadHomeScreen();
-			return true;
-		default:
-			return super.onOptionsItemSelected(item);
+			case android.R.id.home:
+				loadHomeScreen();
+				return true;
+			default:
+				return super.onOptionsItemSelected(item);
 		}
 	}
 

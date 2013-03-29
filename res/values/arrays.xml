@@ -9,6 +9,7 @@
         <item>@string/actionbar_weather_label</item>
         <item>@string/actionbar_posts_label</item>
         <item>@string/actionbar_twitter_label</item>
+        <item>@string/actionbar_navigator_label</item>
         <item>@string/actionbar_asta_label</item>
         <item>@string/actionbar_pingo_label</item>
     </string-array>
@@ -21,6 +22,7 @@
         <item>@string/actionbar_weather_url</item>
         <item>@string/actionbar_posts_url</item>
         <item>@string/actionbar_twitter_url</item>
+        <item>@string/actionbar_navigator_url</item>
         <item>@string/actionbar_asta_url</item>
         <item>@string/actionbar_pingo_url</item>
     </string-array>
