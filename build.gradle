@@ -1,0 +1,37 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath 'com.android.tools.build:gradle:0.7.3'
+    }
+}
+
+repositories {
+    mavenCentral()
+    maven {
+        url 'https://oss.sonatype.org/content/repositories/snapshots/'
+    }
+}
+
+apply plugin: 'android'
+
+android {
+    compileSdkVersion 19
+    buildToolsVersion "19.0.1"
+
+    defaultConfig {
+        minSdkVersion 8
+        targetSdkVersion 19
+    }
+    lintOptions {
+        abortOnError false
+    }
+}
+
+dependencies {
+    compile group: 'com.google.android', name: 'support-v4', version: 'r7'
+    compile 'com.actionbarsherlock:actionbarsherlock:4.4.0@aar'
+}
+

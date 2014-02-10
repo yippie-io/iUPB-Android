@@ -7,6 +7,7 @@
         <item>@string/actionbar_paul_label</item>
         <item>@string/actionbar_parties_label</item>
         <item>@string/actionbar_weather_label</item>
+        <item>@string/actionbar_lunico_label</item>
         <item>@string/actionbar_posts_label</item>
         <item>@string/actionbar_twitter_label</item>
         <item>@string/actionbar_navigator_label</item>
@@ -20,6 +21,7 @@
         <item>@string/actionbar_paul_url</item>
         <item>@string/actionbar_parties_url</item>
         <item>@string/actionbar_weather_url</item>
+        <item>@string/actionbar_lunico_url</item>
         <item>@string/actionbar_posts_url</item>
         <item>@string/actionbar_twitter_url</item>
         <item>@string/actionbar_navigator_url</item>

@@ -1,6 +1,5 @@
 package io.yippie.iupb.lib;
 
-import io.yippie.iupb.app.R;
 import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
