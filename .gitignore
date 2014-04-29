@@ -14,3 +14,7 @@ src/main/gen/
 
 # Local configuration file (sdk path, etc)
 local.properties
+.idea/
+build/
+.gradle/
+iUPB-Android.iml
