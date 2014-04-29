@@ -1,5 +1,6 @@
 package io.yippie.iupb.app.webview;
 
+import android.annotation.*;
 import android.content.*;
 import android.net.*;
 import android.util.*;
@@ -16,12 +17,13 @@ public class IUpbWebView extends WebView implements IUpbWebChromeClientCallback,
     IUpbWebViewClient webViewClient;
     @Bean
     IUpbWebChromeClient webChromeClient;
-    IUpbWebViewCallback mCallback = sDUMMY_CALLBACK;
+    private IUpbWebViewCallback mCallback = sDUMMY_CALLBACK;
 
     public IUpbWebView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
+    @SuppressLint("SetJavaScriptEnabled")
     @AfterInject
     void init() {
         webViewClient.setIUpbWebClientCallback(this);
@@ -57,7 +59,7 @@ public class IUpbWebView extends WebView implements IUpbWebChromeClientCallback,
         this.mCallback = callback;
     }
 
-    public static final IUpbWebViewCallback sDUMMY_CALLBACK = new IUpbWebViewCallback() {
+    private static final IUpbWebViewCallback sDUMMY_CALLBACK = new IUpbWebViewCallback() {
         @Override
         public void setProgressValue(int progress) {
             // dummy

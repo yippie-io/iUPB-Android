@@ -10,8 +10,8 @@ import org.androidannotations.annotations.*;
 import io.yippie.iupb.app.*;
 
 /**
-* TODO doc
-*/
+ * TODO doc
+ */
 @EBean
 public class IUpbWebViewClient extends WebViewClient {
     @RootContext
@@ -54,7 +54,7 @@ public class IUpbWebViewClient extends WebViewClient {
         }
     }
 
-    public static final IUpbWebClientCallback sDUMMY_CALLBACK = new IUpbWebClientCallback() {
+    private static final IUpbWebClientCallback sDUMMY_CALLBACK = new IUpbWebClientCallback() {
         @Override
         public void displayOfflineNotice() {
             // dummy

@@ -5,14 +5,13 @@ import android.content.*;
 import android.content.res.*;
 import android.net.*;
 import android.os.*;
-import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.*;
 import android.util.*;
 import android.view.*;
 import android.webkit.*;
 import android.widget.*;
 
 import com.actionbarsherlock.app.*;
-import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.ActionBar.*;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
@@ -29,13 +28,13 @@ import io.yippie.iupb.app.webview.*;
  * TODO doc
  */
 @EActivity(R.layout.activity_main)
-@SuppressLint("SetJavaScriptEnabled")
+@SuppressLint({"Registered"})
 public class MainActivity extends SherlockActivity implements
         TabListener, OnNavigationListener, IUpbWebViewCallback {
 
     private static final String ASSETS_LOADING_HTML = "file:///android_asset/loading.html";
     private static final String ASSETS_OFFLINE_HTML = "file:///android_asset/offline.html";
-    public final static int FILECHOOSER_REQUEST_CODE = 1;
+    public final static int FILE_CHOOSER_REQUEST_CODE = 1;
     private final String TAG = getClass().getSimpleName();
 
     /**
@@ -78,10 +77,12 @@ public class MainActivity extends SherlockActivity implements
     void afterViews() {
         mCurrentUrl = generateURL(getString(R.string.actionbar_restaurants_url));
         mMainWebView.setCallback(this);
-        // ASSETS_LOADING_HTML is loaded to show that something's happening
+        // ASSETS_LOADING_HTML is loaded to show that something is happening
         mMainWebView.loadUrl(ASSETS_LOADING_HTML);
         mMainWebView.loadUrl(mCurrentUrl);
 
+        setSupportProgressBarVisibility(true);
+        setSupportProgressBarIndeterminateVisibility(true);
         initActionBar();
         initNavigation();
     }
@@ -91,8 +92,6 @@ public class MainActivity extends SherlockActivity implements
         actionBar.setHomeButtonEnabled(true);
         actionBar.setDisplayShowHomeEnabled(true);
         actionBar.setDisplayShowTitleEnabled(false);
-        setSupportProgressBarVisibility(true);
-        setSupportProgressBarIndeterminateVisibility(true);
     }
 
     private void initNavigation() {
@@ -122,7 +121,7 @@ public class MainActivity extends SherlockActivity implements
     @Override
     protected void onActivityResult(int requestCode, int resultCode,
                                     Intent intent) {
-        if (requestCode == FILECHOOSER_REQUEST_CODE) {
+        if (requestCode == FILE_CHOOSER_REQUEST_CODE) {
             if (null == mUploadMessage)
                 return;
             Uri result = intent == null || resultCode != RESULT_OK ? null
@@ -146,17 +145,6 @@ public class MainActivity extends SherlockActivity implements
         super.onConfigurationChanged(newConfig);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
             invalidateOptionsMenu();
-    }
-
-    protected synchronized void removeOfflineNotice() {
-        if (offlineMode) {
-            offlineMode = false;
-            if (mMainWebView.canGoBack())
-                mMainWebView.goBack();
-            else
-                loadWebView(generateURL(getString(R.string.actionbar_restaurants_url)));
-            mMainWebView.clearHistory();
-        }
     }
 
     @Override
@@ -214,7 +202,7 @@ public class MainActivity extends SherlockActivity implements
     }
 
     /**
-     * loads a specific view for the current webview
+     * loads a specific view for the current web view
      */
     private void loadWebView(String url) {
         mCurrentUrl = url;
