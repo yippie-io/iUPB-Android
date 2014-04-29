@@ -24,13 +24,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".RestaurantActivity"
-            android:label="@string/title_activity_restaurant" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="io.yippie.iupb.app.MainActivity" />
-        </activity>
     </application>
 
 </manifest>
