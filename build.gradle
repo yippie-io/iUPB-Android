@@ -1,3 +1,9 @@
+def versionMajor = 1 // incompatible API changes
+def versionMinor = 3 // added functionality in a backwards-compatible manner
+def versionPatch = 1 // backwards-compatible bug fixes
+def versionBuild = 0 // bump for dogfood builds, public betas, etc.
+
+
 buildscript {
     repositories {
         mavenCentral()
@@ -13,7 +19,7 @@ repositories {
     mavenCentral()
     maven {
         url 'https://oss.sonatype.org/content/repositories/snapshots/'
-}
+    }
 }
 
 apply plugin: 'android'
@@ -27,11 +33,20 @@ android {
     buildToolsVersion "19.0.1"
 
     defaultConfig {
+        versionCode versionMajor * 10000 + versionMinor * 1000 + versionPatch * 100 + versionBuild
+        versionName "${versionMajor}.${versionMinor}.${versionPatch}"
+
         minSdkVersion 8
         targetSdkVersion 19
     }
     lintOptions {
         abortOnError false
+    }
+    sourceSets {
+        main {
+            manifest.srcFile 'AndroidManifest.xml'
+        }
+
     }
 }
 
