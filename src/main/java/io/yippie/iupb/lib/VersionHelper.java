@@ -1,10 +1,10 @@
 package io.yippie.iupb.lib;
 
-import android.app.Activity;
+
+import com.actionbarsherlock.app.*;
 
 public class VersionHelper {
-	public static void refreshActionBarMenu(Activity activity)
-    {
+    public static void refreshActionBarMenu(SherlockActivity activity) {
         activity.invalidateOptionsMenu();
     }
 }
