@@ -5,6 +5,7 @@ buildscript {
 
     dependencies {
         classpath 'com.android.tools.build:gradle:0.9.+'
+        classpath 'com.neenbedankt.gradle.plugins:android-apt:1.1'
     }
 }
 
@@ -12,11 +13,15 @@ repositories {
     mavenCentral()
     maven {
         url 'https://oss.sonatype.org/content/repositories/snapshots/'
-    }
+}
 }
 
 apply plugin: 'android'
+apply plugin: 'android-apt'
 
+configurations {
+    apt
+}
 android {
     compileSdkVersion 19
     buildToolsVersion "19.0.1"
@@ -33,5 +38,7 @@ android {
 dependencies {
     compile group: 'com.google.android', name: 'support-v4', version: 'r7'
     compile 'com.actionbarsherlock:actionbarsherlock:4.4.0@aar'
+    apt "org.androidannotations:androidannotations:3.0"
+    compile "org.androidannotations:androidannotations-api:3.0"
 }
 
