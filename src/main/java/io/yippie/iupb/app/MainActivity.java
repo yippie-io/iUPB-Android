@@ -21,8 +21,6 @@ import com.actionbarsherlock.view.Window;
 
 import java.util.*;
 
-import io.yippie.iupb.lib.*;
-
 @SuppressLint("SetJavaScriptEnabled")
 public class MainActivity extends SherlockActivity implements
         ActionBar.TabListener, ActionBar.OnNavigationListener {
@@ -230,7 +228,7 @@ public class MainActivity extends SherlockActivity implements
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
-            VersionHelper.refreshActionBarMenu(this);
+            invalidateOptionsMenu();
     }
 
     protected synchronized void removeOfflineNotice() {
