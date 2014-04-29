@@ -19,8 +19,11 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.Window;
 
+import org.androidannotations.annotations.*;
+
 import java.util.*;
 
+@EActivity
 @SuppressLint("SetJavaScriptEnabled")
 public class MainActivity extends SherlockActivity implements
         ActionBar.TabListener, ActionBar.OnNavigationListener {
@@ -291,9 +294,6 @@ public class MainActivity extends SherlockActivity implements
         }
     }
 
-    /**
-     *
-     */
     private void loadHomeScreen() {
         loadWebView(generateURL(getString(R.string.actionbar_restaurants_url)));
     }
