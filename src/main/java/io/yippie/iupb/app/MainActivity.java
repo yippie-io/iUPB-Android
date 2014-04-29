@@ -1,30 +1,27 @@
 package io.yippie.iupb.app;
 
-import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
-import android.content.res.Configuration;
-import android.net.Uri;
-import android.os.Build;
-import android.os.Bundle;
+import android.annotation.*;
+import android.app.*;
+import android.content.*;
+import android.content.res.*;
+import android.net.*;
+import android.os.*;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
-import android.view.KeyEvent;
-import android.webkit.ValueCallback;
-import android.webkit.WebChromeClient;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
-import android.widget.ArrayAdapter;
+import android.util.*;
+import android.view.*;
+import android.webkit.*;
+import android.widget.*;
+
 import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.ActionBar.Tab;
-import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.app.ActionBar.*;
+import com.actionbarsherlock.app.*;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.Window;
-import io.yippie.iupb.lib.VersionHelper;
 
-import java.util.Locale;
+import java.util.*;
+
+import io.yippie.iupb.lib.*;
 
 @SuppressLint("SetJavaScriptEnabled")
 public class MainActivity extends SherlockActivity implements
@@ -32,17 +29,17 @@ public class MainActivity extends SherlockActivity implements
 
     private static final String ASSETS_LOADING_HTML = "file:///android_asset/loading.html";
     private static final String ASSETS_OFFLINE_HTML = "file:///android_asset/offline.html";
-    private WebView mMainWebView;
-    private static final String DEBUG_TAG = "iupb";
-    private boolean offlineMode = false;
-    private ValueCallback<Uri> mUploadMessage;
     private final static int FILECHOOSER_RESULTCODE = 1;
+    private static final String DEBUG_TAG = "iupb";
 
     /**
      * the current url of the webView
      */
     private String mCurrentUrl;
     private String[] mMenuItemURLs;
+    private WebView mMainWebView;
+    private boolean offlineMode = false;
+    private ValueCallback<Uri> mUploadMessage;
 
     /**
      * @return the currentUrl
@@ -95,32 +92,6 @@ public class MainActivity extends SherlockActivity implements
                 R.layout.sherlock_spinner_item);
         list.setDropDownViewResource(R.layout.sherlock_spinner_dropdown_item);
         actionBar.setListNavigationCallbacks(list, this);
-        /*
-		 * actionBar.addTab(actionBar.newTab().setIcon(R.drawable.ic_action_mensa
-		 * ) .setTag("restaurants") //
-		 * .setText(R.string.actionbar_restaurants_label)
-		 * .setTabListener(this));
-		 * actionBar.addTab(actionBar.newTab().setIcon(R.drawable.ic_action_bus)
-		 * .setTag("transportation") //
-		 * .setText(R.string.actionbar_transportation_label)
-		 * .setTabListener(this));
-		 * actionBar.addTab(actionBar.newTab().setIcon(R.
-		 * drawable.ic_action_table) .setTag("timetable") //
-		 * .setText(R.string.actionbar_timetable_label) .setTabListener(this));
-		 * actionBar
-		 * .addTab(actionBar.newTab().setIcon(R.drawable.ic_action_paul)
-		 * .setTag("courses") // .setText(R.string.actionbar_paul_label)
-		 * .setTabListener(this));
-		 * actionBar.addTab(actionBar.newTab().setIcon(R.
-		 * drawable.ic_action_party) .setTag("events") //
-		 * .setText(R.string.actionbar_parties_label) .setTabListener(this));
-		 * actionBar.addTab(actionBar.newTab()
-		 * .setIcon(R.drawable.ic_action_weather).setTag("weather") //
-		 * .setText(R.string.actionbar_weather_label) .setTabListener(this));
-		 * actionBar.addTab(actionBar.newTab()
-		 * .setIcon(R.drawable.ic_action_twitter).setTag("twitter") //
-		 * .setText(R.string.actionbar_twitter_label) .setTabListener(this));
-		 */
     }
 
     @Override
@@ -185,9 +156,6 @@ public class MainActivity extends SherlockActivity implements
 
         // enable javascript
         mMainWebView.getSettings().setJavaScriptEnabled(true);
-        // mMainWebView.addJavascriptInterface(new
-        // IUPBJavascriptInterface(this),
-        // "Android");
         mMainWebView.getSettings().setUserAgentString(
                 mMainWebView.getSettings().getUserAgentString()
                         + " (iUPBAndroidNativeApp)");
@@ -260,7 +228,6 @@ public class MainActivity extends SherlockActivity implements
      */
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
-        // TODO Auto-generated method stub
         super.onConfigurationChanged(newConfig);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
             VersionHelper.refreshActionBarMenu(this);
@@ -314,7 +281,6 @@ public class MainActivity extends SherlockActivity implements
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // mMainWebView.clearHistory();
         offlineMode = false;
         Log.i(DEBUG_TAG,
                 "menu selected, item = " + item.getItemId());
@@ -349,13 +315,9 @@ public class MainActivity extends SherlockActivity implements
     }
 
     public void onTabUnselected(Tab tab, FragmentTransaction ft) {
-        // TODO Auto-generated method stub
-
     }
 
     public void onTabReselected(Tab tab, FragmentTransaction ft) {
-        // TODO Auto-generated method stub
-
     }
 
     public boolean onNavigationItemSelected(int itemPosition, long itemId) {

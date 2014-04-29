@@ -1,8 +1,8 @@
 package io.yippie.iupb.lib;
 
-import android.content.Context;
-import android.util.Log;
-import android.widget.Toast;
+import android.content.*;
+import android.util.*;
+import android.widget.*;
 
 public class IUPBJavascriptInterface {
 	private static final String TAG = "iupb";
