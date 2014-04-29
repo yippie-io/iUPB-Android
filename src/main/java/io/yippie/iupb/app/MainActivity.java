@@ -1,7 +1,6 @@
 package io.yippie.iupb.app;
 
 import android.annotation.*;
-import android.app.*;
 import android.content.*;
 import android.content.res.*;
 import android.net.*;
@@ -12,41 +11,60 @@ import android.view.*;
 import android.webkit.*;
 import android.widget.*;
 
+import com.actionbarsherlock.app.*;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.ActionBar.*;
-import com.actionbarsherlock.app.*;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.Window;
 
 import org.androidannotations.annotations.*;
+import org.androidannotations.annotations.res.*;
 
 import java.util.*;
 
-@EActivity
+import io.yippie.iupb.app.webview.*;
+
+/**
+ * TODO doc
+ */
+@EActivity(R.layout.activity_main)
 @SuppressLint("SetJavaScriptEnabled")
 public class MainActivity extends SherlockActivity implements
-        ActionBar.TabListener, ActionBar.OnNavigationListener {
+        TabListener, OnNavigationListener, IUpbWebViewCallback {
 
     private static final String ASSETS_LOADING_HTML = "file:///android_asset/loading.html";
     private static final String ASSETS_OFFLINE_HTML = "file:///android_asset/offline.html";
-    private final static int FILECHOOSER_RESULTCODE = 1;
-    private static final String DEBUG_TAG = "iupb";
+    public final static int FILECHOOSER_REQUEST_CODE = 1;
+    private final String TAG = getClass().getSimpleName();
 
     /**
      * the current url of the webView
      */
     private String mCurrentUrl;
-    private String[] mMenuItemURLs;
-    private WebView mMainWebView;
     private boolean offlineMode = false;
     private ValueCallback<Uri> mUploadMessage;
 
-    /**
-     * @return the currentUrl
-     */
-    private String getCurrentUrl() {
-        return mCurrentUrl;
+    @StringArrayRes(R.array.menu_items_urls)
+    String[] mMenuItemURLs;
+
+    @ViewById(R.id.webViewIUPB)
+    IUpbWebView mMainWebView;
+
+
+    public void setProgressValue(int progress) {
+        setSupportProgressBarVisibility(true);
+        setSupportProgressBarIndeterminateVisibility(true);
+        setSupportProgress(progress * 100);
+        if (progress == 100) {
+            setSupportProgressBarVisibility(false);
+            setSupportProgressBarIndeterminateVisibility(false);
+        }
+    }
+
+    @Override
+    public void setUploadMessage(ValueCallback<Uri> uploadMsg) {
+        mUploadMessage = uploadMsg;
     }
 
     @Override
@@ -54,13 +72,38 @@ public class MainActivity extends SherlockActivity implements
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_PROGRESS);
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+    }
 
-        // Let's display the progress in the activity title bar, like the
-        // browser app does.
-        configureLayout();
-        mMenuItemURLs = getResources().getStringArray(R.array.menu_items_urls);
-        configureWebView();
-        configureActionbar();
+    @AfterViews
+    void afterViews() {
+        mCurrentUrl = generateURL(getString(R.string.actionbar_restaurants_url));
+        mMainWebView.setCallback(this);
+        // ASSETS_LOADING_HTML is loaded to show that something's happening
+        mMainWebView.loadUrl(ASSETS_LOADING_HTML);
+        mMainWebView.loadUrl(mCurrentUrl);
+
+        initActionBar();
+        initNavigation();
+    }
+
+    private void initActionBar() {
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setHomeButtonEnabled(true);
+        actionBar.setDisplayShowHomeEnabled(true);
+        actionBar.setDisplayShowTitleEnabled(false);
+        setSupportProgressBarVisibility(true);
+        setSupportProgressBarIndeterminateVisibility(true);
+    }
+
+    private void initNavigation() {
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+        Context context = getSupportActionBar().getThemedContext();
+        ArrayAdapter<CharSequence> list = ArrayAdapter.createFromResource(
+                context, R.array.menu_items_labels,
+                R.layout.sherlock_spinner_item);
+        list.setDropDownViewResource(R.layout.sherlock_spinner_dropdown_item);
+        actionBar.setListNavigationCallbacks(list, this);
     }
 
     @Override
@@ -76,29 +119,10 @@ public class MainActivity extends SherlockActivity implements
         loadWebView(url);
     }
 
-    /**
-     *
-     */
-    private void configureActionbar() {
-        final ActionBar actionBar = getSupportActionBar();
-        actionBar.setHomeButtonEnabled(true);
-        actionBar.setDisplayShowHomeEnabled(true);
-        actionBar.setDisplayShowTitleEnabled(true);
-        setSupportProgressBarVisibility(true);
-        setSupportProgressBarIndeterminateVisibility(true);
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-        Context context = getSupportActionBar().getThemedContext();
-        ArrayAdapter<CharSequence> list = ArrayAdapter.createFromResource(
-                context, R.array.menu_items_labels,
-                R.layout.sherlock_spinner_item);
-        list.setDropDownViewResource(R.layout.sherlock_spinner_dropdown_item);
-        actionBar.setListNavigationCallbacks(list, this);
-    }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode,
                                     Intent intent) {
-        if (requestCode == FILECHOOSER_RESULTCODE) {
+        if (requestCode == FILECHOOSER_REQUEST_CODE) {
             if (null == mUploadMessage)
                 return;
             Uri result = intent == null || resultCode != RESULT_OK ? null
@@ -109,116 +133,6 @@ public class MainActivity extends SherlockActivity implements
         }
     }
 
-    /**
-     *
-     */
-    private void configureLayout() {
-        setContentView(R.layout.activity_main);
-    }
-
-    /**
-     *
-     */
-    private void configureWebView() {
-        Log.i(DEBUG_TAG, "configuring webview");
-        mMainWebView = (WebView) findViewById(R.id.webViewIUPB);
-        mMainWebView.setWebViewClient(new WebViewClient() {
-            @Override
-            public void onReceivedError(WebView view, int errorCode,
-                                        String description, String failingUrl) {
-                super.onReceivedError(view, errorCode, description, failingUrl);
-                // TODO: Add R-String
-                displayOfflineNotice();
-                Log.i(DEBUG_TAG, "Received error, code = "
-                        + errorCode);
-            }
-
-            @Override
-            public boolean shouldOverrideUrlLoading(WebView view, String url) {
-
-                final Uri uri = Uri.parse(url);
-                if (uri.getHost() == null)
-                    return false;
-                if (uri.getHost()
-                        .contains(getString(R.string.iupb_base_url))
-                        || uri.getHost().contains("facebook.")
-                        || (uri.getHost().contains("google.") && !url
-                        .toLowerCase().contains("/calendar"))) {
-                    view.loadUrl(url);
-                    return false;
-                } else {
-                    Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                    startActivity(intent);
-                    return true;
-                }
-            }
-
-        });
-
-        // enable javascript
-        mMainWebView.getSettings().setJavaScriptEnabled(true);
-        mMainWebView.getSettings().setUserAgentString(
-                mMainWebView.getSettings().getUserAgentString()
-                        + " (iUPBAndroidNativeApp)");
-
-        //the below tries to enable android browsers to upload stuff
-        final Activity context = this;
-
-        // configure the progress change
-        mMainWebView.setWebChromeClient(new WebChromeClient() {
-            public void onProgressChanged(WebView view, int progress) {
-                // Activities and WebViews measure progress with different
-                // scales.
-                // The progress meter will automatically disappear when we reach
-                // 100%
-                Log.i(DEBUG_TAG, "Loading progress:"
-                        + (progress * 100));
-                MainActivity.this.setSupportProgressBarVisibility(true);
-                MainActivity.this
-                        .setSupportProgressBarIndeterminateVisibility(true);
-                MainActivity.this.setSupportProgress(progress * 100);
-                if (progress == 100) {
-                    MainActivity.this.setSupportProgressBarVisibility(false);
-                    MainActivity.this
-                            .setSupportProgressBarIndeterminateVisibility(false);
-                }
-            }
-
-            // For Android 3.0 - 4.0 (enables file upload)
-            public void openFileChooser(ValueCallback<Uri> uploadMsg, String acceptType) {
-                Log.i(DEBUG_TAG, "Upload started");
-                triggerUploadIntent(context, uploadMsg);
-            }
-
-            private void triggerUploadIntent(final Activity context,
-                                             ValueCallback<Uri> uploadMsg) {
-                mUploadMessage = uploadMsg;
-                Intent i = new Intent(Intent.ACTION_GET_CONTENT);
-                i.addCategory(Intent.CATEGORY_OPENABLE);
-                i.setType("image/*");
-                context.startActivityForResult(Intent.createChooser(i, "Image Browser"), MainActivity.FILECHOOSER_RESULTCODE);
-            }
-
-            // For Android 4.1+ (enables file upload)
-            public void openFileChooser(ValueCallback<Uri> uploadMsg, String acceptType, String capture) {
-                triggerUploadIntent(context, uploadMsg);
-            }
-
-            // For Android < 3.0 (enables file upload)
-            public void openFileChooser(ValueCallback<Uri> uploadMsg) {
-                Log.i(DEBUG_TAG, "Upload started");
-                openFileChooser(uploadMsg, "");
-            }
-        });
-
-        // load loading url
-        mMainWebView.loadUrl(ASSETS_LOADING_HTML);
-
-        // if no default url exists, set it
-        if (mCurrentUrl == null)
-            mCurrentUrl = generateURL(getString(R.string.actionbar_restaurants_url));
-        mMainWebView.loadUrl(getCurrentUrl());
-    }
 
     /*
      * (non-Javadoc)
@@ -245,7 +159,8 @@ public class MainActivity extends SherlockActivity implements
         }
     }
 
-    private synchronized void displayOfflineNotice() {
+    @Override
+    public synchronized void displayOfflineNotice() {
         if (!offlineMode) {
             offlineMode = true;
             mMainWebView.loadUrl(ASSETS_OFFLINE_HTML);
@@ -283,7 +198,7 @@ public class MainActivity extends SherlockActivity implements
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         offlineMode = false;
-        Log.i(DEBUG_TAG,
+        Log.i(TAG,
                 "menu selected, item = " + item.getItemId());
         switch (item.getItemId()) {
             case android.R.id.home:
