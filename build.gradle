@@ -1,10 +1,17 @@
+def versionMajor = 1 // incompatible API changes
+def versionMinor = 3 // added functionality in a backwards-compatible manner
+def versionPatch = 1 // backwards-compatible bug fixes
+def versionBuild = 0 // bump for dogfood builds, public betas, etc.
+
+
 buildscript {
     repositories {
         mavenCentral()
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:0.7.3'
+        classpath 'com.android.tools.build:gradle:0.9.+'
+        classpath 'com.neenbedankt.gradle.plugins:android-apt:1.1'
     }
 }
 
@@ -16,22 +23,37 @@ repositories {
 }
 
 apply plugin: 'android'
+apply plugin: 'android-apt'
 
+configurations {
+    apt
+}
 android {
     compileSdkVersion 19
     buildToolsVersion "19.0.1"
 
     defaultConfig {
+        versionCode versionMajor * 10000 + versionMinor * 1000 + versionPatch * 100 + versionBuild
+        versionName "${versionMajor}.${versionMinor}.${versionPatch}"
+
         minSdkVersion 8
         targetSdkVersion 19
     }
     lintOptions {
         abortOnError false
     }
+    sourceSets {
+        main {
+            manifest.srcFile 'AndroidManifest.xml'
+        }
+
+    }
 }
 
 dependencies {
     compile group: 'com.google.android', name: 'support-v4', version: 'r7'
     compile 'com.actionbarsherlock:actionbarsherlock:4.4.0@aar'
+    apt "org.androidannotations:androidannotations:3.0"
+    compile "org.androidannotations:androidannotations-api:3.0"
 }
 

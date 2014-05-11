@@ -6,7 +6,7 @@
               android:paddingLeft="0dp"
               android:paddingRight="0dp"
               android:orientation="horizontal">
-    <WebView
+    <io.yippie.iupb.app.webview.IUpbWebView_
         android:id="@+id/webViewIUPB"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"/>
